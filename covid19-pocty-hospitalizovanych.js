@@ -11,13 +11,20 @@ fetch('./variables.json')
                 ['Celkový počet hospitalizovaných']
             ];
 
+            let dataHospNext = [
+                ['Stav bez příznaků nebo lehký'],
+                ['Stav střední nebo těžký']
+            ];
+
             data['hydra:member'].forEach(zaznam => {
                 dataHosp[0].push(zaznam.datum);
                 dataHosp[1].push(zaznam.pocet_hosp);
+                dataHospNext[0].push(zaznam.stav_bez_priznaku + zaznam.stav_lehky);
+                dataHospNext[1].push(zaznam.stav_stredni + zaznam.stav_tezky);
             });
 
 
-            c3.generate({
+            let chart = c3.generate({
                 bindto: '#js-pocet-hospitalizovanych',
                 data: {
                     x: 'x',
@@ -33,15 +40,11 @@ fetch('./variables.json')
                 }
             });
 
-            /* TODO next series
             setTimeout(function () {
                 chart.load({
-                    columns: [
-                        ['data3', 400, 500, 450, 700, 600, 500]
-                    ]
+                    columns: dataHospNext
                 });
-            }, 1000);
-            */
+            }, 5000);
         })
     })
     .catch(error => {
